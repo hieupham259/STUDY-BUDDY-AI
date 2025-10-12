@@ -1,4 +1,5 @@
 import os
+import traceback
 import streamlit as st
 import pandas as pd
 from src.generator.question_generator import QuestionGenerator
@@ -40,14 +41,18 @@ class QuizManager:
                     self.questions.append({
                         'type' : 'Fill in the Blank',
                         'question' : question.question,
-                        'correct_answer': question.correct_answer
+                        'correct_answer': question.answer
                     })
         except Exception as e:
-            st.error(f"Error generating question {e}")
+            st.error(f"Error generating question {e}: {traceback.format_exc()}")
             return False
         return True
     
     def attempt_quiz(self):
+        # Initialize user_answers list to match the number of questions if not already done
+        if len(self.user_answers) != len(self.questions):
+            self.user_answers = [None] * len(self.questions)
+        
         for i, q in enumerate(self.questions):
             st.markdown(f"**Question {i+1} : {q['question']}**")
 
@@ -59,12 +64,13 @@ class QuizManager:
                 )
 
             else:
-                user_answer=st.text_input(
+                user_answer = st.text_input(
                     f"Fill in the blank for Question {i+1}",
                     key = f"fill_blank_{i}"
                 )
 
-            self.user_answers.append(user_answer)
+            # Update the answer at the specific index instead of appending
+            self.user_answers[i] = user_answer
 
     def evaluate_quiz(self):
         self.results = []
@@ -85,6 +91,7 @@ class QuizManager:
             else:
                 result_dict['options'] = []
                 result_dict["is_correct"] = user_ans.strip().lower() == q['correct_answer'].strip().lower()
+                result_dict["is_correct"] = True if user_ans.strip().lower() in q['correct_answer'].strip().lower() else False
 
             self.results.append(result_dict)
 

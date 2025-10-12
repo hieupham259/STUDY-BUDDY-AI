@@ -7,7 +7,7 @@ load_dotenv()
 
 
 def main():
-    st.set_page_config(page_title="studdy Buddy AI" , page_icon="🎧🎧")
+    st.set_page_config(page_title="Quiz Helper" , page_icon="❔" , layout="centered")
 
     if 'quiz_manager'not in st.session_state:
         st.session_state.quiz_manager = QuizManager()
@@ -22,7 +22,7 @@ def main():
         st.session_state.rerun_trigger = False
         
 
-    st.title("Study Buddy AI NEW NEW NEW NEW")
+    st.title("Quiz Helper")
 
     st.sidebar.header("Quiz Settings")
 
@@ -32,10 +32,10 @@ def main():
         index=0
     )
 
-    topic = st.sidebar.text_input("Ennter Topic" , placeholder="Indian History, geography")
+    topic = st.sidebar.text_input("Enter Topic" , placeholder="Great Qing History, geography")
 
     difficulty = st.sidebar.selectbox(
-        "Dificulty Level",
+        "Difficulty Level",
         ["Easy" , "Medium" , "Hard"],
         index=1
     )
@@ -52,12 +52,12 @@ def main():
         st.session_state.quiz_submitted = False
 
         generator = QuestionGenerator()
-        succces = st.session_state.quiz_manager.generate_questions(
+        succes = st.session_state.quiz_manager.generate_questions(
             generator,
             topic,question_type,difficulty,num_questions
         )
 
-        st.session_state.quiz_generated= succces
+        st.session_state.quiz_generated = succes
         rerun()
 
     if st.session_state.quiz_generated and st.session_state.quiz_manager.questions:

@@ -1,4 +1,4 @@
-## Parent image
+## Base image
 FROM python:3.11-slim
 
 ## Essential environment variables
@@ -14,14 +14,17 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-## Copying ur all contents from local to app
-COPY . .
+## Copy requirements.txt first to leverage Docker layer caching
+COPY requirements.txt .
 
-## Install python dependencies
+## Install python dependencies (this layer will be cached if requirements.txt doesn't change)
 RUN pip install --no-cache-dir -r requirements.txt
+
+## Copy the rest of the application files
+COPY . .
 
 # Used PORTS
 EXPOSE 8501
 
 # Run the app 
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0","--server.headless=true"]
+CMD ["streamlit", "run", "application.py", "--server.port=8501", "--server.address=0.0.0.0","--server.headless=true"]

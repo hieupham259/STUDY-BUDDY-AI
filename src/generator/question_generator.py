@@ -26,13 +26,13 @@ class QuestionGenerator:
 
                 parsed = parser.parse(response.content)
 
-                self.logger.info("Sucesfully parsed the question")
+                self.logger.info("Successfully parsed the question")
 
                 return parsed
             
             except Exception as e:
-                self.logger.error(f"Error coming : {str(e)}")
-                if attempt==settings.MAX_RETRIES-1:
+                self.logger.error(f"Error occurred: {str(e)}")
+                if attempt == settings.MAX_RETRIES - 1:
                     raise CustomException(f"Generation failed after {settings.MAX_RETRIES} attempts", e)
                 
     def generate_mcq(self, topic:str, difficulty:str='medium') -> MCQQuestion:
