@@ -693,8 +693,8 @@ argocd login 34.72.5.170:31704 --username admin --password $(kubectl get secret 
 ### Important:
 
 ```groovy
-kubectl create secret generic groq-api-secret \
-  --from-literal=GROQ_API_KEY="" \
+kubectl create secret generic google-api-secret \
+  --from-literal=GOOGLE_API_KEY="" \
   -n argocd
 ```
 
